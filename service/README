@@ -1,0 +1,8 @@
+1. Run: npm run install
+2. Run: npm run start
+
+The server should now be running on port 3000, see the task spec appendix for information on how each endpoint works.
+
+The secret Pin will be printed to your terminal. This is randomly generated each time the server is started.
+
+
