@@ -1,14 +1,17 @@
-import axios from 'axios';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo } from 'react';
 import { ActivityIndicator, Alert, Pressable } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { View, Text } from '../components/Themed';
+import Colors from '../constants/Colors';
 import { AuthContext } from '../context/authContext';
+import useColorScheme from '../hooks/useColorScheme';
 import { FetchState, useFetch } from '../hooks/useFetch';
 
 export default function Dashboard() {
-    const [{error}, logoutRequest, fetchState] = useFetch();
+    const [{error}, logoutRequest, fetchStatus] = useFetch();
     const auth = useContext(AuthContext);
+    const theme = useColorScheme();
+    const styles = useMemo(() => Styles(theme), [theme]);
 
     useEffect(() => {
         if (error) {
@@ -16,7 +19,7 @@ export default function Dashboard() {
         }
     }, [error]);
 
-    const logout = async () => {
+    const logout = () => {
         logoutRequest({
             url: "logout",
             method: "POST",
@@ -29,7 +32,7 @@ export default function Dashboard() {
             <Text style={styles.title}>Hi, Welcome</Text>
             <Pressable onPress={logout} style={styles.button}>
                 {
-                    fetchState === FetchState.fetching ?
+                    fetchStatus === FetchState.fetching ?
                     <ActivityIndicator /> :
                     <Text style={styles.buttonTitle}>Logout</Text>
                 }
@@ -38,7 +41,7 @@ export default function Dashboard() {
     );
 }
 
-const styles = EStyleSheet.create({
+const Styles = (theme: "light" | "dark") => EStyleSheet.create({
     container: {
         flex: 1,
         alignItems: "center",
@@ -49,7 +52,7 @@ const styles = EStyleSheet.create({
     },
     button: {
         borderWidth: 1,
-        borderColor: "white",
+        borderColor: Colors[theme].tint,
         paddingVertical: "1rem",
         paddingHorizontal: "2rem",
         marginVertical: "2rem",

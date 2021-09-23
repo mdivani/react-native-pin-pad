@@ -2,16 +2,16 @@ import React, { useCallback, useContext, useEffect, useRef, useState } from 'rea
 import { ActivityIndicator } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { View } from '../components/Themed';
-import PinPad from '../components/PinPad';
+import PinPad, { IPinPad } from '../components/PinPad/PinPad';
 import useColorScheme from '../hooks/useColorScheme';
 import { FetchState, useFetch } from '../hooks/useFetch';
 import { AuthContext } from '../context/authContext';
 
 export default function PinScreen() {
-    const [{data, error}, loginRequest, state] = useFetch<{token: string}>();
+    const [{data, error}, loginRequest, fetchStatus] = useFetch<{token: string}>();
     const [errorMessage, setErrorMessage] = useState("");
     const auth = useContext(AuthContext);
-    const pinPadRef = useRef<any>();
+    const pinPadRef = useRef<IPinPad>();
     const theme = useColorScheme();
 
     useEffect(() => {
@@ -31,7 +31,7 @@ export default function PinScreen() {
         }
     }, [error]);
 
-    const handleSubmit = useCallback(async (pin: string) => {
+    const handleSubmit = useCallback((pin: string) => {
         loginRequest({
             url: "/login",
             method: "POST",
@@ -48,7 +48,7 @@ export default function PinScreen() {
     return (
         <View style={styles.container}>
             {
-                state === FetchState.fetching ?
+                fetchStatus === FetchState.fetching ?
                 <ActivityIndicator /> :
                 <PinPad
                     ref={pinPadRef}

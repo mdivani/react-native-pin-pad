@@ -1,20 +1,23 @@
 import React, { forwardRef, useCallback, useImperativeHandle, useMemo } from 'react';
-import {FontAwesome5} from "@expo/vector-icons";
-import { Pressable } from 'react-native';
-import EStyleSheet from 'react-native-extended-stylesheet';
 import { TextInput } from 'react-native-gesture-handler';
-import Colors from '../constants/Colors';
-import {useStateWithCallback} from '../hooks/useStateWithCallback';
-import { View, Text } from './Themed';
+import {useStateWithCallback} from '../../hooks/useStateWithCallback';
+import { View, Text } from '../Themed';
+import { Styles } from './styles';
+import NumPad from './NumPad';
+import IconPad from './IconPad';
 
-interface IPinPadProps {
+export interface IPinPadProps {
     theme: "light" | "dark";
     errorMessage?: string;
     onSubmit?: (pin: string) => void;
     onChange?: (pin: string) => void;
 }
 
-function PinPad({theme, errorMessage = "", onSubmit, onChange}: IPinPadProps, ref: React.Ref<any>) {
+export interface IPinPad {
+    reset: () => void;
+}
+
+function PinPad({theme, errorMessage = "", onSubmit, onChange}: IPinPadProps, ref: React.Ref<IPinPad | undefined>) {
     const [pin, setPin] = useStateWithCallback("");
     const styles = useMemo(() => Styles(theme), [theme]);
 
@@ -86,86 +89,3 @@ function PinPad({theme, errorMessage = "", onSubmit, onChange}: IPinPadProps, re
 }
 
 export default forwardRef(PinPad);
-
-interface INumPadProps {
-    theme: "light" | "dark";
-    number: string;
-    onPress: (num: string) => void;
-}
-
-export function NumPad({number = "", theme, onPress}: INumPadProps) {
-    const styles = useMemo(() => Styles(theme), []);
-
-    const handlePress = () => {
-        if (number && onPress) {
-            onPress(number);
-        }
-    }
-
-    return (
-        <Pressable onPress={handlePress} style={[styles.pad, styles.numPad]}>
-            <Text style={styles.padText}>{number}</Text>
-        </Pressable>
-    );
-}
-
-interface IIconPadProps {
-    theme: "light" | "dark";
-    iconName?: string;
-    onPress?: () => void;
-}
-
-export function IconPad({iconName, theme, onPress}: IIconPadProps) {
-    const styles = useMemo(() => Styles(theme), []);
-
-    return (
-        <Pressable onPress={onPress} style={styles.pad}>
-            <FontAwesome5 style={styles.padIcon} name={iconName} />
-        </Pressable>
-    );
-}
-
-const Styles = (theme: "light" | "dark") => EStyleSheet.create({
-    container: {
-        flex: 1,
-        maxWidth: "30rem",
-        maxHeight: "50rem",
-        alignSelf: "center",
-    },
-    row: {
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: "1rem",
-    },
-    pad: {
-        width: "30%",
-        aspectRatio: 1,
-        alignItems: "center",
-        justifyContent: "center",
-        marginHorizontal: "1rem",
-    },
-    numPad: {
-        borderBottomWidth: 1,
-        borderBottomColor: Colors[theme].tint,
-    },
-    padText: {
-        fontSize: "3rem",
-    },
-    errorText: {
-        fontSize: "2rem",
-        color: "red",
-    },
-    padIcon: {
-        fontSize: "2rem",
-        color: Colors[theme].text,
-    },
-    input: {
-        fontSize: "3rem",
-        width: "2rem",
-        marginHorizontal: ".5rem",
-        color: Colors[theme].text,
-        borderBottomWidth: 1,
-        borderBottomColor: Colors[theme].tint,
-    }
-});
