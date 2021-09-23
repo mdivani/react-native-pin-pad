@@ -1,33 +1,27 @@
 import axios from 'axios';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, Pressable } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { View, Text } from '../components/Themed';
 import { AuthContext } from '../context/authContext';
+import { FetchState, useFetch } from '../hooks/useFetch';
 
 export default function Dashboard() {
-    const [fetching, setFetching] = useState(false);
+    const [{error}, logoutRequest, fetchState] = useFetch();
     const auth = useContext(AuthContext);
 
-    const logout = async () => {
-        try {
-            setFetching(true);
-            const response = await axios.post(
-                "http://localhost:3000/logout",
-                {},
-                {
-                    headers: {Authorization: auth.token},
-                },
-            );
-            setFetching(false);
-
-            if (response.status === 200) {
-                auth.setToken("");
-            }
-        } catch (ex) {
-            setFetching(false);
-            Alert.alert("Failed to logout", "Please try again later");
+    useEffect(() => {
+        if (error) {
+            Alert.alert("Failed to logout", `${error.error}. Please try again later`);
         }
+    }, [error]);
+
+    const logout = async () => {
+        logoutRequest({
+            url: "logout",
+            method: "POST",
+            authToken: auth.token,
+        }, () => auth.setToken(""));
     }
 
     return (
@@ -35,7 +29,7 @@ export default function Dashboard() {
             <Text style={styles.title}>Hi, Welcome</Text>
             <Pressable onPress={logout} style={styles.button}>
                 {
-                    fetching ?
+                    fetchState === FetchState.fetching ?
                     <ActivityIndicator /> :
                     <Text style={styles.buttonTitle}>Logout</Text>
                 }

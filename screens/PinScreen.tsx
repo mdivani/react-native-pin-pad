@@ -1,39 +1,43 @@
-import React, { useCallback, useContext, useRef, useState } from 'react';
-import axios from "axios";
-import { View } from '../components/Themed';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { ActivityIndicator } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
+import { View } from '../components/Themed';
 import PinPad from '../components/PinPad';
 import useColorScheme from '../hooks/useColorScheme';
+import { FetchState, useFetch } from '../hooks/useFetch';
 import { AuthContext } from '../context/authContext';
-import { ActivityIndicator } from 'react-native';
 
 export default function PinScreen() {
-    const [state, setState] = useState({error: "", fetching: false});
+    const [{data, error}, loginRequest, state] = useFetch<{token: string}>();
+    const [errorMessage, setErrorMessage] = useState("");
     const auth = useContext(AuthContext);
     const pinPadRef = useRef<any>();
     const theme = useColorScheme();
 
-    const handleSubmit = useCallback(async (pin: string) => {
-        try {
-            setState((prev) => ({...prev, fetching: true}))
-            const response = await axios.post("http://localhost:3000/login", {pin});
-            if (response.status === 200 && response.data.token) {
-                const token = response.data.token;
-                setState({fetching: false, error: ""});
-                auth.setToken(token);
-            } else {
-                setState({fetching: false, error: "Oops something went wrong"});
-                resetPin();                
-            }
-        } catch (ex: any) {
-            if (ex.response && ex.response.status === 403) {
-                setState({fetching: false, error: "Incorrect pin"});
+    useEffect(() => {
+        if (data) {
+            auth.setToken(data.token);
+        }
+    }, [data]);
+
+    useEffect(() => {
+        if (error) {
+            if (error.error === "INCORRECT_PIN") {
+                setErrorMessage("Incorrect pin");
                 resetPin();
             } else {
-                setState({fetching: false, error: "Try Again"});
+                setErrorMessage("Try again later");
             }
         }
-    }, []);
+    }, [error]);
+
+    const handleSubmit = useCallback(async (pin: string) => {
+        loginRequest({
+            url: "/login",
+            method: "POST",
+            data: {pin},
+        });
+    }, [loginRequest]);
 
     const resetPin = () => {
         if (pinPadRef && pinPadRef.current) {
@@ -44,14 +48,14 @@ export default function PinScreen() {
     return (
         <View style={styles.container}>
             {
-                state.fetching ?
+                state === FetchState.fetching ?
                 <ActivityIndicator /> :
                 <PinPad
                     ref={pinPadRef}
                     onSubmit={handleSubmit}
-                    onChange={() => setState((prev) => ({...prev, error: ""}))}
+                    onChange={() => setErrorMessage("")}
                     theme={theme}
-                    errorMessage={state.error} />
+                    errorMessage={errorMessage} />
             }
         </View>
     );
