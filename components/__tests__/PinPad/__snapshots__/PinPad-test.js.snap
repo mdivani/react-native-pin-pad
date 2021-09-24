@@ -90,6 +90,7 @@ exports[`renders correctly 1`] = `
           undefined,
         ]
       }
+      testID="num-pad"
     >
       <Text
         style={
@@ -122,6 +123,7 @@ exports[`renders correctly 1`] = `
           undefined,
         ]
       }
+      testID="num-pad"
     >
       <Text
         style={
@@ -154,6 +156,7 @@ exports[`renders correctly 1`] = `
           undefined,
         ]
       }
+      testID="num-pad"
     >
       <Text
         style={
@@ -197,6 +200,7 @@ exports[`renders correctly 1`] = `
           undefined,
         ]
       }
+      testID="num-pad"
     >
       <Text
         style={
@@ -229,6 +233,7 @@ exports[`renders correctly 1`] = `
           undefined,
         ]
       }
+      testID="num-pad"
     >
       <Text
         style={
@@ -261,6 +266,7 @@ exports[`renders correctly 1`] = `
           undefined,
         ]
       }
+      testID="num-pad"
     >
       <Text
         style={
@@ -304,6 +310,7 @@ exports[`renders correctly 1`] = `
           undefined,
         ]
       }
+      testID="num-pad"
     >
       <Text
         style={
@@ -336,6 +343,7 @@ exports[`renders correctly 1`] = `
           undefined,
         ]
       }
+      testID="num-pad"
     >
       <Text
         style={
@@ -368,6 +376,7 @@ exports[`renders correctly 1`] = `
           undefined,
         ]
       }
+      testID="num-pad"
     >
       <Text
         style={
@@ -405,8 +414,9 @@ exports[`renders correctly 1`] = `
       onResponderTerminate={[Function]}
       onResponderTerminationRequest={[Function]}
       onStartShouldSetResponder={[Function]}
+      testID="icon-pad"
     >
-      <Text />
+      <View />
     </View>
     <View
       accessible={true}
@@ -426,6 +436,7 @@ exports[`renders correctly 1`] = `
           undefined,
         ]
       }
+      testID="num-pad"
     >
       <Text
         style={
@@ -452,8 +463,11 @@ exports[`renders correctly 1`] = `
       onResponderTerminate={[Function]}
       onResponderTerminationRequest={[Function]}
       onStartShouldSetResponder={[Function]}
+      testID="icon-pad"
     >
-      <Text />
+      <View
+        name="backspace"
+      />
     </View>
   </View>
   <View

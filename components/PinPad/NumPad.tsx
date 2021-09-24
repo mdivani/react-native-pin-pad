@@ -13,13 +13,16 @@ export default function NumPad({number = "", theme, onPress}: INumPadProps) {
     const styles = useMemo(() => Styles(theme), []);
 
     const handlePress = () => {
-        if (number && onPress) {
-            onPress(number);
-        }
+        onPress(number);
     }
 
     return (
-        <Pressable onPress={handlePress} style={[styles.pad, styles.numPad]}>
+        <Pressable
+            disabled={!number}
+            testID="num-pad"
+            onPress={handlePress}
+            style={[styles.pad, styles.numPad]}
+        >
             <Text style={styles.padText}>{number}</Text>
         </Pressable>
     );

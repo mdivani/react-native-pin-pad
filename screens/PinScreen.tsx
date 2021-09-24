@@ -49,7 +49,7 @@ export default function PinScreen() {
         <View style={styles.container}>
             {
                 fetchStatus === FetchState.fetching ?
-                <ActivityIndicator /> :
+                <ActivityIndicator color={theme === "dark" ? "#fff" : "#000"} /> :
                 <PinPad
                     ref={pinPadRef}
                     onSubmit={handleSubmit}

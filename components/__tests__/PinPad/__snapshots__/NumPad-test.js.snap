@@ -19,6 +19,7 @@ exports[`renders correctly 1`] = `
       undefined,
     ]
   }
+  testID="num-pad"
 >
   <Text
     style={

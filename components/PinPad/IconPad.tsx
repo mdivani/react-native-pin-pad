@@ -13,7 +13,7 @@ export default function IconPad({iconName, theme, onPress}: IIconPadProps) {
     const styles = useMemo(() => Styles(theme), []);
 
     return (
-        <Pressable onPress={onPress} style={styles.pad}>
+        <Pressable testID="icon-pad" disabled={!iconName} onPress={onPress} style={styles.pad}>
             <FontAwesome5 style={styles.padIcon} name={iconName} />
         </Pressable>
     );
