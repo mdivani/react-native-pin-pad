@@ -5,11 +5,10 @@ more details - https://docs.expo.dev/get-started/installation/
 
 To run service from root:
 
-cd ./service && npm start && cd ../
+`cd ./service && npm start && cd ../`
 
 To start app run following commands:
 
-expo install
-npm start
+`expo install && npm start`
 
 to run mobile app on actual device, replace http://localhost:3000 apiBaseUrl in ./appApi.ts file with network api url
